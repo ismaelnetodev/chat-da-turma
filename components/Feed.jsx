@@ -2,7 +2,7 @@
 
 import { Typography, Empty, Space } from "antd"
 import { PostCard } from "@/components/PostCard"
-import { posts } from "@/data/Post"
+// import { posts } from "@/data/Post"
 
 
 const styles = {
@@ -24,7 +24,8 @@ const styles = {
 }
 
 export function Feed() {
-  const hasPosts = posts.length > 0
+  // const hasPosts = posts.length > 0
+  const hasPosts = 0
 
   return (
     <main style={styles.container}>

@@ -87,7 +87,7 @@ const styles = {
 export function PostCard({ autor, conteudo, data }) {
   return (
     <Card
-      bordered={false}
+      variant={false}
       style={styles.card}
       styles={{ body: styles.body }}
     >
