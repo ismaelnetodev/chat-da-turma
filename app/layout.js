@@ -1,14 +1,21 @@
 import './globals.css'
+import { Header } from '@/components/Header'
 
 export const metadata = {
   title: 'Chat da Turma',
-  description: 'Entre no chat em tempo real da sua turma',
+  description: 'Plataforma de comunicação da turma de Engenharia de Software',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        {/* Cabeçalho global de navegação */}
+        <Header />
+
+        {/* Conteúdo da página ativa */}
+        {children}
+      </body>
     </html>
   )
 }
