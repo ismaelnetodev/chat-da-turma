@@ -377,3 +377,40 @@ body {
     font-size: 1.75rem;
   }
 }
+
+.auth-page {
+  min-height: 100vh;
+  background: var(--color-bg-page, #f2f3f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+}
+
+.auth-title {
+  margin-bottom: 4px !important;
+  color: var(--color-heading, #111827) !important;
+}
+
+.auth-subtitle {
+  display: block;
+  margin-bottom: 24px;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.auth-alert {
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  margin-bottom: 0 !important;
+  text-align: center;
+}
