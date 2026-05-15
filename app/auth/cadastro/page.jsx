@@ -31,7 +31,7 @@ export default function CadastroPage() {
       return
     }
 
-    router.push('/auth/login')
+    router.push('/perfil')
   }
 
   return (
@@ -68,7 +68,7 @@ export default function CadastroPage() {
               { min: 3, message: 'O nome deve ter pelo menos 3 caracteres.' },
             ]}
           >
-            <Input placeholder="Ex: Ismael Neto" maxLength={60} />
+            <Input maxLength={60} />
           </Form.Item>
 
           <Form.Item
@@ -79,7 +79,7 @@ export default function CadastroPage() {
               { min: 3, message: 'O usuário deve ter pelo menos 3 caracteres.' },
             ]}
           >
-            <Input placeholder="Ex: ismaelneto" maxLength={30} />
+            <Input maxLength={30} />
           </Form.Item>
 
           <Form.Item
