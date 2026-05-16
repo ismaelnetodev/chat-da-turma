@@ -2,7 +2,7 @@
 
 import {useState} from 'react'
 import { useRouter } from 'next/navigation'
-import {Input, Button} from '/antd'
+import {Input, Button, Alert} from 'antd'
 import { createPost } from '@/lib/posts'
 import { getCurrentUser } from '@/lib/auth'
 
@@ -14,13 +14,14 @@ export default function PostForm() {
     const router = useRouter()
 
     async function handleSubmit() {
+        setErrorMessage('')
         if (!content.trim()) {
             setErrorMessage('O post não pode estar vazio')
             return
         }
 
         setLoading(true)
-        // console.log(content)
+        
         try {
             const {user} = await getCurrentUser()
 
@@ -29,7 +30,7 @@ export default function PostForm() {
                 return
             }
 
-            const {error} = await createPost({content, userId: user.id})
+            const {error} = await createPost(content, user.id)
 
             if (error) {
                 setErrorMessage(error.message || 'Erro ao publicar post')
@@ -51,9 +52,9 @@ export default function PostForm() {
 
             <p>{content.length}/280</p>
 
-            {errorMessage && (<p>{errorMessage}</p>)}
+            {errorMessage && (<Alert title={errorMessage} type='error' showIcon/>)}
 
-            <button type='primary' onClick={handleSubmit} loading={loading}>Publicar</button>
+            <Button type='primary' onClick={handleSubmit} loading={loading}>Publicar</Button>
         </div>
     )
 }

@@ -3,25 +3,80 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
+import { getCurrentUser } from '../../lib/auth'
+import { getCurrentProfile } from '../../lib/profile'
 
 export default function ChatRoom() {
   const { room } = useParams()
   const router = useRouter()
   const [name, setName] = useState('')
+  const [userId, setUserId] = useState(null)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const bottomRef = useRef(null)
 
-  // Pega o nome salvo e redireciona se não tiver
+  // Pega o nome do usuário autenticado ou o nome salvo. Se não existir, redireciona.
   useEffect(() => {
-    const saved = sessionStorage.getItem('chat_name')
-    if (!saved) {
-      router.push('/')
-      return
+    let mounted = true
+
+    async function loadName() {
+      if (!supabase) {
+        if (mounted) setLoading(false)
+        return
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      const currentUser = session?.user ?? null
+      if (currentUser) {
+        const { profile } = await getCurrentProfile()
+        if (!mounted) return
+        setName(profile?.name || currentUser.email || '')
+        setUserId(currentUser.id)
+        setLoading(false)
+        return
+      }
+
+      const saved = sessionStorage.getItem('chat_name')
+      if (saved) {
+        if (!mounted) return
+        setName(saved)
+        setUserId(null)
+        setLoading(false)
+        return
+      }
+
+      if (mounted) {
+        setLoading(false)
+        router.push('/')
+      }
     }
-    setName(saved)
+
+    loadName()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return
+      if (session?.user) {
+        setUserId(session.user.id)
+        getCurrentProfile().then(({ profile }) => {
+          if (!mounted) return
+          setName(profile?.name || session.user.email || '')
+        })
+      } else {
+        setUserId(null)
+      }
+    })
+
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [router])
 
   // Carrega mensagens iniciais + inscreve no Realtime
@@ -85,9 +140,12 @@ export default function ChatRoom() {
     const tempId = 'temp-' + Date.now()
     setMessages(prev => [...prev, { id: tempId, room, name, content, created_at: new Date().toISOString() }])
 
+    const insertPayload = { room, name, content }
+    if (userId) insertPayload.user_id = userId
+
     const { data, error: err } = await supabase
       .from('messages')
-      .insert({ room, name, content })
+      .insert(insertPayload)
       .select()
       .single()
 
