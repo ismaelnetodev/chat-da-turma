@@ -69,6 +69,7 @@ export default function Header() {
 
         {!loading && user && (
           <>
+            <Link href="/geral">Chat</Link>
             <Link href="/perfil">Perfil</Link>
             <Link href="/post/novo">Novo post</Link>
 
