@@ -1,12 +1,13 @@
 'use client'
 
-import { Avatar, Card, Typography } from 'antd'
+import { Avatar, Button, Card, Space, Typography } from 'antd'
+import { HeartFilled, HeartOutlined } from '@ant-design/icons'
 
 const { Text, Paragraph } = Typography
 
-/** Gera as iniciais do nome para o avatar */
 function getInitials(name) {
-  if (!name) return 'AN'
+  if (!name) return '?'
+
   return name
     .split(' ')
     .map((word) => word[0])
@@ -15,9 +16,9 @@ function getInitials(name) {
     .toUpperCase()
 }
 
-/** Formata a data para pt-BR — ex.: "12 de abr. de 2025" */
 function formatDate(dateStr) {
   if (!dateStr) return ''
+
   try {
     return new Date(dateStr).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -43,7 +44,7 @@ const styles = {
     padding: '18px 20px',
   },
   avatar: {
-    background: '#0ea5e9',
+    background: '#0a9e7a',
     color: '#ffffff',
     fontWeight: 700,
     flexShrink: 0,
@@ -55,13 +56,17 @@ const styles = {
   meta: {
     display: 'flex',
     alignItems: 'baseline',
-    gap: 8,
+    gap: 6,
     marginBottom: 8,
     flexWrap: 'wrap',
   },
   author: {
     fontSize: 14,
     color: '#111827',
+  },
+  username: {
+    fontSize: 13,
+    color: '#6b7280',
   },
   date: {
     fontSize: 12,
@@ -71,38 +76,73 @@ const styles = {
     fontSize: 14,
     color: '#374151',
     lineHeight: 1.65,
-    marginBottom: 0,
+    marginBottom: 12,
     wordBreak: 'break-word',
+  },
+  actions: {
+    marginTop: 4,
+  },
+  likeButton: {
+    padding: 0,
+    height: 'auto',
+    color: '#0a9e7a',
   },
 }
 
-/**
- * PostCard — card reutilizável que exibe uma publicação da turma.
- *
- * Props:
- *   autor    {string}  Nome do autor do post
- *   conteudo {string}  Texto da publicação
- *   data     {string}  Data em formato ISO ou legível
- */
-export function PostCard({ autor, conteudo, data }) {
+export function PostCard({ post, onLike }) {
+  const author = post?.author || {}
+  const authorName = author.name || 'Usuário'
+  const username = author.username || 'usuario'
+  const likesCount = post?.likesCount ?? 0
+
   return (
     <Card
       variant={false}
       style={styles.card}
       styles={{ body: styles.body }}
     >
-      {/* Avatar com iniciais do autor */}
-      <Avatar size={42} style={styles.avatar}>
-        {getInitials(autor)}
-      </Avatar>
+      {author.avatarUrl ? (
+        <Avatar
+          size={42}
+          src={author.avatarUrl}
+          alt={`Foto de perfil de ${authorName}`}
+          style={{ flexShrink: 0 }}
+        />
+      ) : (
+        <Avatar size={42} style={styles.avatar}>
+          {getInitials(authorName)}
+        </Avatar>
+      )}
 
-      {/* Conteúdo do post */}
       <div style={styles.content}>
         <div style={styles.meta}>
-          <Text strong style={styles.author}>{autor}</Text>
-          <Text style={styles.date}>{formatDate(data)}</Text>
+          <Text strong style={styles.author}>
+            {authorName}
+          </Text>
+
+          <Text style={styles.username}>
+            @{username}
+          </Text>
+
+          <Text style={styles.date}>
+            · {formatDate(post?.createdAt)}
+          </Text>
         </div>
-        <Paragraph style={styles.text}>{conteudo}</Paragraph>
+
+        <Paragraph style={styles.text}>
+          {post?.content}
+        </Paragraph>
+
+        <Space style={styles.actions}>
+          <Button
+            type="text"
+            icon={post?.likedByMe ? <HeartFilled /> : <HeartOutlined />}
+            onClick={onLike}
+            style={styles.likeButton}
+          >
+            {likesCount} {likesCount === 1 ? 'curtida' : 'curtidas'}
+          </Button>
+        </Space>
       </div>
     </Card>
   )
