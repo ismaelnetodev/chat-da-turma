@@ -4,7 +4,6 @@ import { Avatar, Card, Typography } from 'antd'
 
 const { Text, Paragraph } = Typography
 
-/** Gera as iniciais do nome para o avatar */
 function getInitials(name) {
   if (!name) return 'AN'
   return name
@@ -15,7 +14,6 @@ function getInitials(name) {
     .toUpperCase()
 }
 
-/** Formata a data para pt-BR — ex.: "12 de abr. de 2025" */
 function formatDate(dateStr) {
   if (!dateStr) return ''
   try {
