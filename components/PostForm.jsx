@@ -47,14 +47,67 @@ export default function PostForm() {
     }
 
     return (
-        <div>
-            <Input.TextArea value={content} onChange={(e) => setContent(e.target.value)} placeholder='Digite seu post...' maxLength={280} rows={4}/>
+       <div
+        style={{
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            paddingTop: '40px',
+            paddingLeft: '16px',
+            paddingRight: '16px'
+        }}
+    >
+        <div
+            style={{
+                width: '100%',
+                maxWidth: '700px',
+                background: '#fff',
+                padding: '24px',
+                borderRadius: '16px',
+                boxShadow: '0 12px 40px rgba(0, 0, 0, 0.12)'
+            }}
+        >
+            <h1 style={{ marginBottom: '20px' }}>
+                Novo Post
+            </h1>
 
-            <p>{content.length}/280</p>
+            <Input.TextArea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder='Digite seu post...'
+                maxLength={280}
+                rows={4}
+            />
 
-            {errorMessage && (<Alert title={errorMessage} type='error' showIcon/>)}
+            <p
+                style={{
+                    marginTop: '8px',
+                    marginBottom: '16px',
+                    color: '#666'
+                }}
+            >
+                {content.length}/280
+            </p>
 
-            <Button type='primary' onClick={handleSubmit} loading={loading}>Publicar</Button>
+            {errorMessage && (
+                <Alert
+                    title={errorMessage}
+                    type='error'
+                    showIcon
+                    style={{ marginBottom: '16px' }}
+                />
+            )}
+
+            <Button
+                type='primary'
+                onClick={handleSubmit}
+                loading={loading}
+                block
+            >
+                Publicar
+            </Button>
         </div>
+    </div>
     )
 }
